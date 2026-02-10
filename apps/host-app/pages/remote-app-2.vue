@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { shallowRef, markRaw, onMounted } from 'vue'
 
-const Remote2 = ref<any | null>(null)
+const Remote2 = shallowRef<any | null>(null)
 const importError = ref<string | null>(null)
 
 if (process.client) {
@@ -10,7 +10,7 @@ if (process.client) {
             // Try explicit dynamic import via federation-aware specifier
             const spec = 'remote' + '2/RemoteRoot'
             const mod = await import(/* @vite-ignore */ spec)
-            Remote2.value = (mod && (mod.default || mod)) as any
+            Remote2.value = markRaw((mod && (mod.default || mod))) as any
         } catch (err: any) {
             importError.value = String(err)
 
@@ -22,7 +22,7 @@ if (process.client) {
                 if (entry && typeof entry.get === 'function') {
                     const factory = await entry.get('./RemoteRoot')
                     const mod2 = factory && (await factory())
-                    Remote2.value = (mod2 && (mod2.default || mod2)) as any
+                    Remote2.value = markRaw((mod2 && (mod2.default || mod2))) as any
                     importError.value = null
                 }
             } catch (err2: any) {
