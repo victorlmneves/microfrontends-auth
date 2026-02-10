@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { shallowRef, markRaw, onMounted } from 'vue'
+import { shallowRef, markRaw, onMounted, ref } from 'vue'
+import { loadRemote } from '../utils/loadRemote'
 
 const Remote1 = shallowRef<any | null>(null)
 const importError = ref<string | null>(null)
@@ -7,28 +8,13 @@ const importError = ref<string | null>(null)
 if (process.client) {
     onMounted(async () => {
         try {
-            // Try explicit dynamic import via federation-aware specifier
-            const spec = 'remote' + '1/RemoteRoot'
-            const mod = await import(/* @vite-ignore */ spec)
-            Remote1.value = markRaw((mod && (mod.default || mod))) as any
+            // Runtime-only loader: import the remoteEntry and resolve the exposed module.
+            const entryUrl = 'http://' + 'localhost:3001' + '/assets/remoteEntry.js'
+            const comp = await loadRemote(entryUrl, './RemoteRoot')
+            Remote1.value = markRaw(comp) as any
+            importError.value = null
         } catch (err: any) {
             importError.value = String(err)
-
-            // Fallback: import the remoteEntry module directly and resolve the exposed module
-            try {
-                const entryUrl = 'http://' + 'localhost:3001' + '/assets/remoteEntry.js'
-                const entry = await import(/* @vite-ignore */ entryUrl)
-
-                // `get` should return a factory function which returns the module when invoked
-                if (entry && typeof entry.get === 'function') {
-                    const factory = await entry.get('./RemoteRoot')
-                    const mod2 = factory && (await factory())
-                    Remote1.value = markRaw((mod2 && (mod2.default || mod2))) as any
-                    importError.value = null
-                }
-            } catch (err2: any) {
-                importError.value = String(err2)
-            }
         }
     })
 }
