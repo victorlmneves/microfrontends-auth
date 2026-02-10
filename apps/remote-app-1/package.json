@@ -8,6 +8,7 @@
         "start": "nuxt start"
     },
     "dependencies": {
-        "nuxt": "latest"
+        "nuxt": "latest",
+        "vue": "^3.5.28"
     }
 }
