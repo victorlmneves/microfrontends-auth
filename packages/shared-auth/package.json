@@ -1,0 +1,7 @@
+{
+    "name": "@mf/shared-auth",
+    "version": "0.0.0",
+    "main": "./composables/useAuthentication.ts",
+    "types": "./composables/useAuthentication.ts",
+    "private": true
+}

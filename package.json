@@ -1,0 +1,12 @@
+{
+    "name": "microfrontends-auth",
+    "version": "0.0.0",
+    "private": true,
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "devDependencies": {
+        "nuxt": "latest"
+    }
+}
