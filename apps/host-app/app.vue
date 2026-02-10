@@ -15,9 +15,9 @@ const remote2Href = `http://localhost:${ports.remote2}`;
         <header class="site-header">
             <nav>
                 <ul>
-                    <li><a :href="hostHref" target="_blank" rel="noopener">Host</a></li>
-                    <li><a :href="remote1Href" target="_blank" rel="noopener">Remote App 1</a></li>
-                    <li><a :href="remote2Href" target="_blank" rel="noopener">Remote App 2</a></li>
+                    <li><NuxtLink to="/">Host: {{ hostHref }}</NuxtLink></li>
+                    <li><NuxtLink to="/remote-app-1">Remote App 1: {{ remote1Href }}</NuxtLink></li>
+                    <li><NuxtLink to="/remote-app-2">Remote App 2: {{ remote2Href }}</NuxtLink></li>
                 </ul>
             </nav>
         </header>
