@@ -1,7 +1,9 @@
 export async function loadRemote(entryUrl: string, exposed: string) {
-    // Load the remote entry as an ESM module at runtime. Use @vite-ignore so Vite
-    // doesn't try to statically analyze the string during dev/server transforms.
-    const entry = await import(/* @vite-ignore */ entryUrl)
+    // Load the remote entry as an ESM module at runtime. Use an indirect
+    // dynamic import via the Function constructor to avoid Vite's static
+    // analysis/transform of `import()` during SSR/dev transforms.
+    // eslint-disable-next-line no-new-func
+    const entry = await (new Function('u', 'return import(u)'))(entryUrl)
 
     if (!entry) {
         throw new Error(`Failed to import remote entry: ${entryUrl}`)
